@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MapSecure AI</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #A0D1E8, #E2B0D7);
+    }
+
+    section {
+      padding: 40px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .section-text {
+      flex: 1;
+      padding: 20px;
+      min-width: 280px;
+    }
+
+    .section-img {
+      flex: 1;
+      text-align: center;
+    }
+
+    .section-img img {
+      max-width: 100%;
+      border-radius: 20px;
+    }
+
+    footer {
+      padding: 50px 20px;
+      background-color: #f0f0f0;
+      text-align: left;
+      border-radius: 20px;
+    }
+
+    .login-box {
+      padding: 60px;
+      background-color: white;
+      border-radius: 15px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      margin: 70px;
+    }
+
+    .login-box h1 {
+      font-size: 1.8em;
+      margin-bottom: 10px;
+    }
+
+    .login-box .aadhaar-logo {
+      width: 100px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .login-box input {
+      width: 95%;
+      padding: 14px;
+      margin: 10px 0;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .login-box button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #1DB954;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .otp-popup {
+      display: none;
+      padding: 20px;
+      width: 350px;
+      margin-top: 15px;
+      margin-left: -35px;
+      background-color: #e0f7fa;
+      border: 1px solid #00acc1;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    .otp-inputs {
+      display: none;
+      justify-content: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .otp-inputs input {
+      width: 45px;
+      height: 55px;
+      text-align: center;
+      font-size: 24px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      transition: 0.3s ease;
+    }
+
+    .otp-inputs input:focus {
+      border-color: #007BFF;
+      outline: none;
+    }
+
+    .resend-btn {
+      display: none;
+      padding: 8px 20px;
+      font-size: 14px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .login-otp-btn {
+      margin-top: 10px;
+      padding: 10px 22px;
+      font-size: 16px;
+      background-color: #1DB954;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .intro-section {
+      background-color: transparent;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .welcome-text {
+      text-align: left;
+      padding-left: 60px;
+    }
+
+    @media screen and (max-width: 1024px) {
+      .welcome-text {
+        padding-left: 20px;
+        text-align: center;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .intro-section {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .login-box {
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section class="intro-section">
+    <div class="section-text welcome-text">
+      <div style="max-width: 400px; margin-bottom: 20px;">
+        <img src="logo.png" alt="MapSecure AI Logo" style="width: 100%; border-radius: 0px;" />
+      </div>
+      <h1 style="font-size: 2.5em; color: #333;">Welcome to MapSecure AI</h1>
+      <p style="font-size: 1.2em;">
+        A Secure Mapping System for Government Buildings — <br> Integrated with Aadhaar-based access, real-time
+        tracking, and IP logging.
+      </p>
+    </div>
+    <div class="login-box">
+      <img src="aadhar.png" alt="Aadhaar Logo" class="aadhaar-logo" />
+      <h1>Login with Aadhaar</h1>
+      <input type="text" id="aadhaar" maxlength="12" placeholder="Enter 12-digit Aadhaar number" />
+      <br />
+      <button onclick="sendOTP()">Send OTP</button>
+      <div class="otp-popup" id="otpBox">
+        <p>OTP has been sent to your registered mobile number.</p>
+        <div class="otp-inputs" id="otpInputs">
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+          <input type="text" maxlength="1" />
+        </div>
+        <button class="login-otp-btn" onclick="verifyOTP()">Login</button>
+        <p id="timer">Resend OTP in 30s</p>
+        <button class="resend-btn" id="resendBtn" onclick="resendOTP()">Resend OTP</button>
+      </div>
+    </div>
+  </section>
+  <!-- Technology Section -->
+  <section style="background: linear-gradient(to bottom right, #A7F3D0, #E0F2FE);">
+    <div class="section-text">
+      <h1>Next-Gen Secure Technology</h1>
+      <p>
+        MapSecure AI uses internal building blueprints, tracks logins using Aadhaar verification,
+        and stores access logs based on IP addresses and access times. Built for high-security environments.
+      </p>
+    </div>
+    <div class="section-img">
+      <img src="gbuil.jpg" alt="Map Technology Preview" style="max-width: 400px; width: 100%; border-radius: 20px;" />
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section style="background-color: #ffffff; border-radius: 20px; margin: 20px;">
+    <div class="section-text">
+      <h1>Features & Support</h1>
+      <ul style="font-size: 18px; line-height: 1.8;">
+        <li>Real-time building access map</li>
+        <li>Aadhaar-based authentication</li>
+        <li>IP and device logging</li>
+        <li>Live alerts on unauthorized entries</li>
+        <li>24/7 support via our control centers</li>
+      </ul>
+    </div>
+    <div class="section-img">
+      <img src="spt.jpg" alt="Support Preview" />
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <h1>Connect with Us</h1>
+    <h2>MAIN OFFICE</h2>
+    <p>
+      Raisoni Innovation Lab<br />
+      Mohali, Tech<br />
+      (8600705500)<br />
+      contact@mapsecure.ai
+    </p>
+    <h2>Social Media</h2>
+    <p>
+      <a href="#" style="text-decoration: none; color: #1d4ed8;">LinkedIn</a>,
+      <a href="#" style="text-decoration: none; color: #1d4ed8;">GitHub</a>,
+      <a href="#" style="text-decoration: none; color: #1d4ed8;">X (Twitter)</a>
+    </p>
+  </footer>
+  <script>
+    function sendOTP() {
+      const aadhaar = document.getElementById('aadhaar').value;
+      const otpBox = document.getElementById('otpBox');
+      const timerText = document.getElementById('timer');
+      const otpInputs = document.getElementById('otpInputs');
+      const resendBtn = document.getElementById('resendBtn');
+      if (aadhaar.length !== 12 || isNaN(aadhaar)) {
+        alert("Please enter a valid 12-digit Aadhaar number.");
+        return;
+      }
+      otpBox.style.display = 'block';
+      otpInputs.style.display = 'flex';
+      resendBtn.style.display = 'none';
+      let timeLeft = 30;
+      timerText.textContent = `Resend OTP in ${timeLeft}s`;
+      const timer = setInterval(() => {
+        timeLeft--;
+        timerText.textContent = `Resend OTP in ${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          timerText.textContent = '';
+          resendBtn.style.display = 'inline-block';
+        }
+      }, 1000);
+    }
+
+    function resendOTP() {
+      document.getElementById('resendBtn').style.display = 'none';
+      sendOTP();
+    }
+
+    function verifyOTP() {
+      const otp = Array.from(document.querySelectorAll('.otp-inputs input'))
+        .map(input => input.value)
+        .join('');
+      if (otp.length !== 6 || isNaN(otp)) {
+        alert("Please enter a valid 6-digit OTP.");
+        return;
+      }
+      alert("OTP Verified Successfully! Redirecting...");
+      // Redirect to dashboard
+      window.location.href = "dashboard.html";
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs = document.querySelectorAll('.otp-inputs input');
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+          if (e.inputType === "insertText" && input.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === "Backspace" && input.value === "" && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+      });
+      inputs[0].addEventListener('paste', (e) => {
+        const data = e.clipboardData.getData('text').trim();
+        if (data.length === 6 && /^\d+$/.test(data)) {
+          inputs.forEach((input, i) => {
+            input.value = data[i];
+          });
+          inputs[5].focus();
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+
+
+</body>
+</html>
